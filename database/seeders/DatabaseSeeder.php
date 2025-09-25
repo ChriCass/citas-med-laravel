@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // Aquí estoy llamando todos los Seeders en orden
         $this->call([
+            RolesSeeder::class,
             SuperAdminSeeder::class,
         ]);
     }
