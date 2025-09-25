@@ -13,10 +13,13 @@ class SuperAdminController extends Controller
         return view('superadmin.index');
     }
 
+    // Listar usuarios en una vista Blade
     public function usuarios() {
-        return Usuario::with('roles')->get();
+        $usuarios = Usuario::with('roles')->get();
+        return view('superadmin.usuarios', compact('usuarios')); // <-- Devuelve Blade
     }
 
+    // Crear usuario y redirigir a la lista
     public function crearUsuario(Request $request) {
         $usuario = Usuario::create([
             'dni' => $request->dni,
@@ -25,8 +28,10 @@ class SuperAdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
         $rol = Rol::where('nombre', $request->rol)->first();
         $usuario->roles()->attach($rol->id);
-        return $usuario;
+
+        return redirect()->route('superadmin.usuarios')->with('success', 'Usuario creado correctamente');
     }
 }

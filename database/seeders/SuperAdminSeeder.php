@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Hash;
 
 class SuperAdminSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
+        // Crear el usuario SuperAdmin si no existe
         $superadmin = Usuario::firstOrCreate(
             ["email" => "admin@clinica.com"],
             [
@@ -22,14 +26,11 @@ class SuperAdminSeeder extends Seeder
             ]
         );
 
+        // Buscar el rol superadmin
         $rol = Rol::where("nombre", "superadmin")->first();
-        if (
-            $rol &&
-            !$superadmin
-                ->roles()
-                ->where("rol_id", $rol->id)
-                ->exists()
-        ) {
+
+        // Si existe el rol y no está asignado aún, lo asignamos
+        if ($rol && !$superadmin->roles()->where("rol_id", $rol->id)->exists()) {
             $superadmin->roles()->attach($rol->id);
         }
     }
